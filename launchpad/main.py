@@ -56,8 +56,8 @@ class MainHandler(tornado.web.RequestHandler):
                     if root == scan_folder_path:
                         url_f = "/{}/".format(f)
                     else:
-                        url_f = "/{}/{}/".format(root[len(scan_folder_path):],f)
-                    apps.append(AppInfo(name=f.name, url=url_f))
+                        url_f = "{}/{}/".format(root[len(scan_folder_path):],f)
+                    apps.append(AppInfo(name=url_f, url=url_f))
 
         self.write(template_loader.load('main.html').generate(apps=apps, cwd=scan_folder_path, title=page_title))
         self.finish()

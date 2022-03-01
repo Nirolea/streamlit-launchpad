@@ -49,9 +49,15 @@ def popenAndCall(onExit, *popenArgs, **popenKWArgs):
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         apps = []
-        for f in os.scandir(scan_folder_path):
-            if f.name[-3:] == '.py':
-                apps.append(AppInfo(name=f.name, url="/{}/".format(f.name)))
+        for root, dirs, files in os.walk(scan_folder_path, topdown=False):
+            # print(root, dirs, files)
+            for f in files:
+                if f[-3:] == '.py':
+                    if root == scan_folder_path:
+                        url_f = "/{}/".format(f)
+                    else:
+                        url_f = "/{}/{}/".format(root[len(scan_folder_path):],f)
+                    apps.append(AppInfo(name=f.name, url=url_f))
 
         self.write(template_loader.load('main.html').generate(apps=apps, cwd=scan_folder_path, title=page_title))
         self.finish()
